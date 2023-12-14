@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html class="mdl-js">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimal-ui">
+    <link rel="shortcut icon" href="./utils/icon.png" type="image/png">
+    <title>Hải Hồ & Quỳnh Lê</title>
+
+    <meta name="description" content="Thiệp cưới Online của Chú rể Hải Hồ và Cô dâu Quỳnh Lê.">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta property="og:site_name" content="Thiệp cưới Hải - Quỳnh">
+    <meta property="og:title" content="Hải - Quỳnh thân mời">
+    <meta property="og:type" content="website">
+    <meta property="og:description" content="Thiệp cưới Online của Chú rể Hải Hồ và Cô dâu Quỳnh Lê.">
+    <meta property="og:image" content="https://haihovn.github.io/wedding/gallery/cover.jpg">
+    <meta property="og:image:secure_url" content="https://haihovn.github.io/wedding/gallery/cover.jpg">
+
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Thân mời Quý Khách">
+    <meta name="twitter:description" content="Thiệp cưới Online của Chú rể Hải Hồ và Cô dâu Quỳnh Lê.">
+    <meta name="csrf-token" content="ADaDXQD6mRBVErEJOOFrMFOYAkmWshGFQJaoW7xt">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+    <style>
+        table, th, td {
+            border:0.1px solid black;
+        }
+    </style>
+
+</head>
+
+<body>
+    <table id="friend-list">
+        <tr>
+            <th>Bride Friend</th>
+            <th>Name</th>
+            <th>Wish</th>
+            <th>Number of attendants</th>
+        </tr>
+    </table>
+    
+    <script type="module" id="firebase-module">
+        var host = "https://wedding-seven-alpha.vercel.app/?guest=";
+
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-app.js";
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            
+      apiKey: "AIzaSyDP0nHNLneqG0-mJ5mL5bdvoLnjMWcA1us",
+      authDomain: "wedding-doanh-trinh.firebaseapp.com",
+      databaseURL: "https://wedding-doanh-trinh-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "wedding-doanh-trinh",
+      storageBucket: "wedding-doanh-trinh.appspot.com",
+      messagingSenderId: "615189547961",
+      appId: "1:615189547961:web:30cc835fa6d7cd2f70c468"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        // const analytics = getAnalytics(app);
+        import { getDatabase, ref, get, set, child, update, remove }
+            from "https://www.gstatic.com/firebasejs/10.5.0/firebase-database.js";
+        const db = getDatabase();
+        
+        const dbref = ref(db);
+
+        // console.log(guest_code);
+        get(child(dbref, "GuestResponses")).then((snapshot) => {
+            console.log(snapshot.val());
+            var friends = snapshot.val();
+            var table = document.getElementById("friend-list");
+            for (const [key, value] of Object.entries(friends)) {
+                var row = table.insertRow(1);
+                var cell1 = row.insertCell(0);
+                var cell2 = row.insertCell(1);
+                var cell3 = row.insertCell(2);
+                var cell4 = row.insertCell(3);
+                cell1.innerHTML = value.bride_friend;
+                cell1.id = 'bride-friend';
+                cell2.innerHTML = value.guest_name;
+                cell2.id = 'guest-name';
+                cell3.innerHTML = value.mess;
+                cell3.id = 'mess'
+                cell4.innerHTML = value.num_of_participant;
+            }
+
+        })
+        .catch((error) => {
+            alert("unsuccessful, error" + error);
+        });
+    </script>
+</body>
+
+</html>

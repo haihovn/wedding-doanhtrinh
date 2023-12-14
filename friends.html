@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimal-ui">
+    <link rel="shortcut icon" href="./utils/icon.png" type="image/png">
+    <title>Hải Hồ & Quỳnh Lê</title>
+
+    <meta name="description" content="Thiệp cưới Online của Chú rể Hải Hồ và Cô dâu Quỳnh Lê.">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta property="og:site_name" content="Thiệp cưới Hải - Quỳnh">
+    <meta property="og:title" content="Hải - Quỳnh thân mời">
+    <meta property="og:type" content="website">
+    <meta property="og:description" content="Thiệp cưới Online của Chú rể Hải Hồ và Cô dâu Quỳnh Lê.">
+    <meta property="og:image" content="https://haihovn.github.io/wedding/gallery/cover.jpg">
+    <meta property="og:image:secure_url" content="https://haihovn.github.io/wedding/gallery/cover.jpg">
+
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Thân mời Quý Khách">
+    <meta name="twitter:description" content="Thiệp cưới Online của Chú rể Hải Hồ và Cô dâu Quỳnh Lê.">
+    <meta name="csrf-token" content="ADaDXQD6mRBVErEJOOFrMFOYAkmWshGFQJaoW7xt">
+
+    <style type="text/css">
+        .table-row {
+            border-bottom: 5px solid #333333;
+        }
+    </style>
+</head>
+
+<body>
+
+    </iframe>
+    <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names.." title="Type in a name">
+    <table id="friend-list" class="myTable">
+        <button id="add-friend">Add new friend</button>
+        <button id="save-all">Save all changes</button>
+
+
+        <tr class="table-header">
+            <th>Code</th>
+            <th>Name</th>
+            <th>Bride Friend</th>
+            <th>URL</th>
+        </tr>
+    </table>
+
+    <script>
+        function myFunction() {
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("myInput");
+            filter = input.value.toUpperCase();
+            table = document.getElementsByClassName("myTable")[0];
+            tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[1];
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+    </script>
+
+    <script type="module" id="firebase-module">
+        var host = "https://wedding-seven-alpha.vercel.app/?guest=";
+
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-app.js";
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            
+      apiKey: "AIzaSyDP0nHNLneqG0-mJ5mL5bdvoLnjMWcA1us",
+      authDomain: "wedding-doanh-trinh.firebaseapp.com",
+      databaseURL: "https://wedding-doanh-trinh-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "wedding-doanh-trinh",
+      storageBucket: "wedding-doanh-trinh.appspot.com",
+      messagingSenderId: "615189547961",
+      appId: "1:615189547961:web:30cc835fa6d7cd2f70c468"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        // const analytics = getAnalytics(app);
+        import { getDatabase, ref, get, set, child, update, remove }
+            from "https://www.gstatic.com/firebasejs/10.5.0/firebase-database.js";
+        const db = getDatabase();
+
+
+        function SaveAllChanges() {
+            var rows = document.getElementsByClassName('table-row')
+            for (const value of rows) {
+                // console.log(value)
+                var detail = value.children
+                var friend_code = detail[0].innerHTML;
+                var friend_name = detail[1].innerHTML.includes('<input') ? $(detail[1]).children('input').val() : detail[1].innerHTML;
+                var bride_friend = detail[2].innerHTML.includes('<select') ? $(detail[2]).children('select').val() : detail[2].innerHTML;
+                
+                set(ref(db, "Guest/" + friend_code), {
+                    "name": friend_name,
+                    "bride_friend": bride_friend
+                })
+                $(detail[1]).html(friend_name);
+                $(detail[2]).html(bride_friend);
+            }
+            alert("thông tin khách đã được cập nhật");
+        }
+
+        function EditValue(event) {
+            if ($(this).children("input").length > 0)
+                return false;
+
+            var tdObj = $(this);
+            var preText = tdObj.html();
+            var inputObj = $("<input type='text' />");
+
+            tdObj.html("");
+
+            inputObj.width(tdObj.width())
+                .height(tdObj.height())
+                .css({ border: "0px", fontSize: "17px" })
+                .val(preText)
+                .appendTo(tdObj)
+                .trigger("focus")
+                .trigger("select");
+
+            inputObj.keyup(function (event) {
+                if (13 == event.which) { // press ENTER-key
+                    var text = $(this).val();
+                    tdObj.html(text);
+                    var parentElemHTML = $(tdObj.parent().html());
+                    var friend_code = parentElemHTML[0].innerHTML;
+                    var friend_name = parentElemHTML[1].innerHTML;
+                    var bride_friend = parentElemHTML[2].innerHTML;
+
+                    set(ref(db, "Guest/" + friend_code), {
+                        "name": friend_name,
+                        "bride_friend": bride_friend
+                    })
+                        .then(() => {
+                            alert("thông tin khách đã được cập nhật");
+                        })
+                        .catch((error) => {
+                            alert("unsuccessful, error" + error);
+                        });
+                }
+                else if (27 == event.which) {  // press ESC-key
+                    tdObj.html(preText);
+                }
+            });
+
+            inputObj.click(function () {
+                return false;
+            });
+        }
+
+
+        function EditSelectionValue(event) {
+            if ($(this).children("input").length > 0)
+                return false;
+
+            var tdObj = $(this);
+            var preText = tdObj.html();
+            var inputObj = $("<select id=\"bride-friend\"><option value=\"true\">True</option><option value=\"false\">False</option></select>");
+
+            tdObj.html("");
+
+            inputObj.width(tdObj.width())
+                .height(tdObj.height())
+                .css({ border: "0px", fontSize: "17px" })
+                .val(preText)
+                .appendTo(tdObj)
+                .trigger("focus")
+                .trigger("select");
+
+            inputObj.keyup(function (event) {
+                if (13 == event.which) { // press ENTER-key
+                    var text = $(this).val();
+                    tdObj.html(text);
+                    var parentElemHTML = $(tdObj.parent().html());
+                    var friend_code = parentElemHTML[0].innerHTML;
+                    var friend_name = parentElemHTML[1].innerHTML;
+                    var bride_friend = parentElemHTML[2].innerHTML;
+
+                    set(ref(db, "Guest/" + friend_code), {
+                        "name": friend_name,
+                        "bride_friend": bride_friend
+                    })
+                        .then(() => {
+                            alert("thông tin khách đã được cập nhật");
+                        })
+                        .catch((error) => {
+                            alert("unsuccessful, error" + error);
+                        });
+                }
+                else if (27 == event.which) {  // press ESC-key
+                    tdObj.html(preText);
+                }
+            });
+
+            inputObj.click(function () {
+                return false;
+            });
+        }
+
+        function InsertData() {
+            var val_num = $('select[id="num_of_participants"]').val();
+            var bride_friend = $('label[for="option-1"]').hasClass('activep');
+            const params = new Proxy(new URLSearchParams(window.location.search), {
+                get: (searchParams, prop) => searchParams.get(prop),
+            });
+            let guest_code = params.guest;
+            // console.log(guest_code);
+            if (guest_code === null) {
+                var name = guestNameInp.value;
+                guest_code = Math.random().toString(36).substring(2, 7);
+            } else {
+                var name = guestNameText.innerHTML;
+            }
+            if (name === '' || name === null) {
+                alert("Nhập tên khách mời!");
+            } else {
+                if ($(".option-3boxp").hasClass('activep')) {
+                    val_num = 0;
+                };
+
+                swal({
+                    title: "",
+                    text: "<div class='text-left'>Gửi lời nhắn hoặc lời chúc</div><textarea id='text-rsvp' class='form-control' rows='5'></textarea>",
+                    html: true,
+                    showCancelButton: false,
+                    confirmButtonText: 'Gửi đi',
+                    closeOnConfirm: true,
+                    closeOnCancel: true,
+                }, function (isConfirm) {
+                    let valxxx = document.getElementById('text-rsvp').value;
+                    set(ref(db, "GuestResponses/" + guest_code), {
+                        "num_of_participant": val_num,
+                        "guest_name": name,
+                        "mess": valxxx,
+                        "bride_friend": bride_friend
+                    })
+                        .then(() => {
+                            alert("Lời yêu thương đã được gửi đi");
+                        })
+                        .catch((error) => {
+                            alert("unsuccessful, error" + error);
+                        });
+                });
+
+            }
+        }
+
+        const dbref = ref(db);
+        const queryString = window.location.search;
+        console.log(queryString);
+
+        // console.log(guest_code);
+        get(child(dbref, "Guest")).then((snapshot) => {
+            // console.log(snapshot.val());
+            var friends = snapshot.val();
+            var table = document.getElementById("friend-list");
+            for (const [key, value] of Object.entries(friends)) {
+                var row = table.insertRow(1);
+                row.classList.add('table-row')
+                var cell1 = row.insertCell(0);
+                var cell2 = row.insertCell(1);
+                var cell3 = row.insertCell(2);
+                var cell4 = row.insertCell(3);
+                cell1.innerHTML = key;
+                cell1.id = 'friend-id';
+                cell2.innerHTML = value.name;
+                cell2.id = 'friend-name';
+                cell3.innerHTML = value.bride_friend;
+                cell3.id = 'bride-friend'
+                cell4.innerHTML = host + key;
+                cell2.addEventListener('click', EditValue);
+                cell3.addEventListener('click', EditSelectionValue);
+                // console.log(value)
+            }
+
+        })
+            .catch((error) => {
+                alert("unsuccessful, error" + error);
+            });
+        // }
+
+        function myCreateFunction() {
+            var host = "https://wedding-seven-alpha.vercel.app/?guest=";
+            var table = document.getElementById("friend-list");
+            var row = table.insertRow(1);
+            row.classList.add('table-row')
+            var cell1 = row.insertCell(0);
+            var cell2 = row.insertCell(1);
+            var cell3 = row.insertCell(2);
+            var cell4 = row.insertCell(3);
+            var key = Math.random().toString(36).substring(2, 10);
+            cell1.innerHTML = key;
+            cell2.innerHTML = "Friend Name";
+            cell3.innerHTML = "true";
+            cell4.innerHTML = host + key;
+            cell2.addEventListener('click', EditValue);
+            cell3.addEventListener('click', EditSelectionValue);
+        }
+
+        var addFriendBtn = document.getElementById("add-friend");
+        var saveAllChanges = document.getElementById("save-all");
+        addFriendBtn.addEventListener('click', myCreateFunction)
+        saveAllChanges.addEventListener('click', SaveAllChanges)
+    </script>
+</body>
+
+</html>
