@@ -4316,6 +4316,7 @@
 
     var insBtn = document.getElementById("Layer_1");
     var guestNameText = document.getElementById("guest_name");
+    var guestNameCard = document.getElementsByClassName("guest_name_card")[0];
     var guestNameInp = document.getElementById("guest_name_inp");
     var guestSideDiv = document.getElementById("guest_side");
 
@@ -4390,7 +4391,9 @@
         var name = snapshot.val().name;
         var brideFriend = snapshot.val().bride_friend;
         guestNameText.innerHTML = name;
+        guestNameCard.innerHTML = name;
         guestNameText.style.display = null;
+        guestNameCard.style.display = null;
         guestNameInp.style.display = 'none';
         guestSideDiv.style.display = 'none';
         document.title = "Thân mời " + name;
