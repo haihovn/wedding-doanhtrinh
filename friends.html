@@ -80,14 +80,14 @@
 
         // Your web app's Firebase configuration
         const firebaseConfig = {
-            
-      apiKey: "AIzaSyDP0nHNLneqG0-mJ5mL5bdvoLnjMWcA1us",
-      authDomain: "wedding-doanh-trinh.firebaseapp.com",
-      databaseURL: "https://wedding-doanh-trinh-default-rtdb.asia-southeast1.firebasedatabase.app",
-      projectId: "wedding-doanh-trinh",
-      storageBucket: "wedding-doanh-trinh.appspot.com",
-      messagingSenderId: "615189547961",
-      appId: "1:615189547961:web:30cc835fa6d7cd2f70c468"
+
+            apiKey: "AIzaSyDP0nHNLneqG0-mJ5mL5bdvoLnjMWcA1us",
+            authDomain: "wedding-doanh-trinh.firebaseapp.com",
+            databaseURL: "https://wedding-doanh-trinh-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "wedding-doanh-trinh",
+            storageBucket: "wedding-doanh-trinh.appspot.com",
+            messagingSenderId: "615189547961",
+            appId: "1:615189547961:web:30cc835fa6d7cd2f70c468"
         };
 
         // Initialize Firebase
@@ -106,7 +106,7 @@
                 var friend_code = detail[0].innerHTML;
                 var friend_name = detail[1].innerHTML.includes('<input') ? $(detail[1]).children('input').val() : detail[1].innerHTML;
                 var bride_friend = detail[2].innerHTML.includes('<select') ? $(detail[2]).children('select').val() : detail[2].innerHTML;
-                
+
                 set(ref(db, "Guest/" + friend_code), {
                     "name": friend_name,
                     "bride_friend": bride_friend
@@ -266,9 +266,7 @@
         const queryString = window.location.search;
         console.log(queryString);
 
-        // console.log(guest_code);
         get(child(dbref, "Guest")).then((snapshot) => {
-            // console.log(snapshot.val());
             var friends = snapshot.val();
             var table = document.getElementById("friend-list");
             for (const [key, value] of Object.entries(friends)) {
@@ -287,14 +285,12 @@
                 cell4.innerHTML = host + key;
                 cell2.addEventListener('click', EditValue);
                 cell3.addEventListener('click', EditSelectionValue);
-                // console.log(value)
             }
 
         })
             .catch((error) => {
                 alert("unsuccessful, error" + error);
             });
-        // }
 
         function myCreateFunction() {
             var host = "https://wedding-doanhtrinh.vercel.app/?guest=";
